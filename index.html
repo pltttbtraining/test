@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ttb Trainer Task</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ==================== RESET & BASE ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        :root {
+            --primary: #002d63;
+            --secondary: #0099d8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ==================== HEADER ==================== */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .header-content h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .header-content .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        /* ==================== MAIN CONTENT ==================== */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: var(--light);
+        }
+
+        /* ==================== CARDS ==================== */
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-light);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ==================== BUTTONS ==================== */
+        .btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #34d399 100%);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #f87171 100%);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        /* ==================== INPUTS ==================== */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 14px;
+        }
+
+        .input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--radius);
+            font-size: 16px;
+            transition: border-color 0.3s;
+            background: white;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(0, 157, 216, 0.1);
+        }
+
+        .select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--radius);
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+        }
+
+        /* ==================== BADGES ==================== */
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .badge-online {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-f2f {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-partner {
+            background: rgba(0, 45, 99, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(0, 45, 99, 0.3);
+        }
+
+        .badge-team-specialist {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .badge-team-mandatory {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        /* ==================== TASK CARDS ==================== */
+        .task-card {
+            border-left: 4px solid var(--secondary);
+            position: relative;
+        }
+
+        .task-card.online {
+            border-left-color: var(--success);
+        }
+
+        .task-card.f2f {
+            border-left-color: var(--warning);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .task-trainer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .trainer-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .trainer-info h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .trainer-info p {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .task-time {
+            background: rgba(0, 157, 216, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .task-detail {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .task-location {
+            font-size: 14px;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .task-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--gray-light);
+        }
+
+        /* ==================== NAVIGATION ==================== */
+        .nav-bar {
+            background: white;
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            padding: 12px 0;
+            position: sticky;
+            bottom: 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            width: 30px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .nav-add-btn {
+            position: relative;
+            top: -20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(0, 45, 99, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 4px solid white;
+        }
+
+        .nav-add-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 45, 99, 0.4);
+        }
+
+        /* ==================== LOGIN SCREEN ==================== */
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .login-logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 20px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+            transform: rotate(3deg);
+        }
+
+        .login-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: var(--gray);
+            margin-bottom: 32px;
+            font-size: 16px;
+        }
+
+        /* ==================== LOADING & EMPTY STATES ==================== */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: var(--gray);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--gray-light);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 480px) {
+            .app-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+            
+            body {
+                padding: 0;
+                background: white;
+            }
+            
+            .main-content {
+                padding: 16px;
+            }
+        }
+
+        /* ==================== SUMMARY TEXTAREA ==================== */
+        .summary-text {
+            width: 100%;
+            min-height: 300px;
+            padding: 16px;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--radius);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            background: #f8fafc;
+            resize: vertical;
+            white-space: pre-wrap;
+        }
+
+        /* ==================== UTILITY ==================== */
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .gap-2 {
+            gap: 8px;
+        }
+
+        .gap-4 {
+            gap: 16px;
+        }
+
+        .mb-2 {
+            margin-bottom: 8px;
+        }
+
+        .mb-4 {
+            margin-bottom: 16px;
+        }
+
+        .mb-6 {
+            margin-bottom: 24px;
+        }
+
+        .mt-2 {
+            margin-top: 8px;
+        }
+
+        .mt-4 {
+            margin-top: 16px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-sm {
+            font-size: 14px;
+        }
+
+        .text-xs {
+            font-size: 12px;
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .text-success {
+            color: var(--success);
+        }
+
+        .text-danger {
+            color: var(--danger);
+        }
+
+        .text-gray {
+            color: var(--gray);
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- App content will be rendered here -->
+    </div>
+
+    <script>
+        // ============================================
+        // SUPABASE CONFIGURATION
+        // ============================================
+        const SUPABASE_CONFIG = {
+            URL: 'https://yiiphgodmsqjoptvlg.supabase.co',
+            KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpaXBoZ29kbXNxam9icHR2bGdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4Njc1MjUsImV4cCI6MjA4MDQ0MzUyNX0.ZQF2Oqa-8W9hlcHjnr2F7Az-1mx9AT_lafddBqNfCW4'
+        };
+
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(SUPABASE_CONFIG.URL, SUPABASE_CONFIG.KEY);
+
+        // ============================================
+        // SYSTEM DATA
+        // ============================================
+        const ROLES = {
+            MASTER: 'Master',
+            ADMIN: 'Admin',
+            TRAINER: 'Trainer'
+        };
+
+        const TEAMS = {
+            SPECIALIST: 'Training Specialist',
+            MANDATORY: 'Mandatory'
+        };
+
+        const SYSTEM_USERS = [
+            { id: 'ttb_yj', name: 'Yannapat Jaruwongpaiboon', nickname: 'Yannapat', role: ROLES.MASTER, team: TEAMS.SPECIALIST, email: 'yannapat.prudential@gmail.com' },
+            { id: 'ttb_ac', name: 'Ananya Chantaraman', nickname: 'Ananya', role: ROLES.ADMIN, team: null, email: 'Ananyacha10@gmail.com' },
+            { id: 'ttb_sp', name: 'Supaporn Plapblee', nickname: 'Supaporn', role: ROLES.ADMIN, team: null, email: 'jibjib1981.SP@gmail.com' },
+            { id: 'ttb_tt', name: 'Thanayot Thiamsawat', nickname: 'Bank', role: ROLES.TRAINER, team: TEAMS.SPECIALIST, email: 'thanayot.calendar@gmail.com' },
+            { id: 'ttb_pp', name: 'Pachara Phattaratrirakul', nickname: 'Pachara', role: ROLES.TRAINER, team: TEAMS.SPECIALIST, email: 'greatkaloo@gmail.com' },
+            { id: 'ttb_wc', name: 'Wattanapan Chaipool', nickname: 'Wattanapan', role: ROLES.TRAINER, team: TEAMS.SPECIALIST, email: 'wattanapan.ch@gmail.com' },
+            { id: 'ttb_as', name: 'Arthaphan Suwanpraditt', nickname: 'Arthaphan', role: ROLES.TRAINER, team: TEAMS.SPECIALIST, email: 'arthaphs@gmail.com' },
+            { id: 'ttb_nj', name: 'Natkanit Jariyadilok', nickname: 'Natkanit', role: ROLES.TRAINER, team: TEAMS.SPECIALIST, email: 'natkanitjariyadilok@gmail.com' },
+            { id: 'ttb_ap', name: 'Alangkorn Pooim', nickname: 'Alangkorn', role: ROLES.TRAINER, team: TEAMS.MANDATORY, email: 'korn.ak28@gmail.com' },
+            { id: 'ttb_np', name: 'Nantida Pinhirun', nickname: 'Nantida', role: ROLES.TRAINER, team: TEAMS.MANDATORY, email: 'nantidapin6395@gmail.com' },
+            { id: 'ttb_pn', name: 'Patchareeya Nopwinyuwong', nickname: 'Patchareeya', role: ROLES.TRAINER, team: TEAMS.MANDATORY, email: 'patchareeya.n0412@gmail.com' },
+            { id: 'ttb_sd', name: 'Suksawad Ditsumrueng', nickname: 'Suksawad', role: ROLES.TRAINER, team: TEAMS.MANDATORY, email: 'Wad008.dd@gmail.com' },
+            { id: 'ttb_sk', name: 'Supat Koonkitti', nickname: 'Supat', role: ROLES.TRAINER, team: TEAMS.MANDATORY, email: 'Supat.koonkitti@gmail.com' }
+        ];
+
+        const PARTNERS = ['ttb', 'PD', 'TTT', 'PRU', 'Other'];
+        const METHODS = ['F2F', 'Online'];
+
+        // ============================================
+        // APPLICATION STATE
+        // ============================================
+        let currentUser = null;
+        let currentView = 'login';
+        let tasks = [];
+        let isLoading = false;
+
+        // ============================================
+        // HELPER FUNCTIONS
+        // ============================================
+        function formatDate(date) {
+            const d = new Date(date);
+            return d.toISOString().split('T')[0];
+        }
+
+        function getThaiDate(dateStr) {
+            const date = new Date(dateStr);
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('th-TH', options);
+        }
+
+        function getToday() {
+            return formatDate(new Date());
+        }
+
+        function getTomorrow() {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            return formatDate(tomorrow);
+        }
+
+        function getInitials(name) {
+            return name.substring(0, 2).toUpperCase();
+        }
+
+        // ============================================
+        // DATABASE OPERATIONS
+        // ============================================
+        async function loadTasks() {
+            try {
+                isLoading = true;
+                const { data, error } = await supabase
+                    .from('tasks')
+                    .select('*')
+                    .order('date', { ascending: true })
+                    .order('start_time', { ascending: true });
+
+                if (error) throw error;
+                
+                tasks = data || [];
+                return true;
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                alert('เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message);
+                return false;
+            } finally {
+                isLoading = false;
+            }
+        }
+
+        async function addTask(taskData) {
+            try {
+                const taskToSave = {
+                    ...taskData,
+                    trainer_name: currentUser.name,
+                    trainer_nickname: currentUser.nickname,
+                    team: currentUser.team || 'Other',
+                    created_by: currentUser.id,
+                    created_at: new Date().toISOString()
+                };
+
+                const { data, error } = await supabase
+                    .from('tasks')
+                    .insert([taskToSave])
+                    .select();
+
+                if (error) throw error;
+                
+                tasks.push(data[0]);
+                return true;
+            } catch (error) {
+                console.error('Error adding task:', error);
+                alert('เกิดข้อผิดพลาดในการเพิ่มงาน: ' + error.message);
+                return false;
+            }
+        }
+
+        async function deleteTask(taskId) {
+            if (!confirm('คุณแน่ใจว่าต้องการลบงานนี้?')) return false;
+            
+            try {
+                const { error } = await supabase
+                    .from('tasks')
+                    .delete()
+                    .eq('id', taskId);
+
+                if (error) throw error;
+                
+                tasks = tasks.filter(task => task.id !== taskId);
+                return true;
+            } catch (error) {
+                console.error('Error deleting task:', error);
+                alert('เกิดข้อผิดพลาดในการลบงาน: ' + error.message);
+                return false;
+            }
+        }
+
+        // ============================================
+        // AUTHENTICATION
+        // ============================================
+        function login(userId) {
+            const user = SYSTEM_USERS.find(u => u.id.toLowerCase() === userId.toLowerCase());
+            
+            if (user) {
+                currentUser = user;
+                currentView = 'home';
+                localStorage.setItem('ttb_trainer_user', userId);
+                loadTasks().then(() => renderApp());
+                return true;
+            } else {
+                alert('User ID ไม่ถูกต้อง\n\nตัวอย่าง: ttb_yj (Master), ttb_ac (Admin), ttb_tt (Trainer)');
+                return false;
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            currentView = 'login';
+            localStorage.removeItem('ttb_trainer_user');
+            renderApp();
+        }
+
+        // ============================================
+        // RENDER FUNCTIONS
+        // ============================================
+        function renderApp() {
+            const app = document.getElementById('app');
+            
+            if (currentView === 'login') {
+                renderLogin(app);
+            } else {
+                renderMainApp(app);
+            }
+        }
+
+        function renderLogin(container) {
+            container.innerHTML = `
+                <div class="login-container">
+                    <div class="login-card">
+                        <div class="login-logo">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h1 class="login-title">ttb Trainer Task</h1>
+                        <p class="login-subtitle">ระบบจัดการตารางงานเทรนเนอร์</p>
+                        
+                        <div class="input-group">
+                            <input type="text" 
+                                   id="userIdInput" 
+                                   class="input" 
+                                   placeholder="กรอก User ID ของคุณ (เช่น ttb_yj)"
+                                   value="ttb_yj"
+                                   autocomplete="off">
+                        </div>
+                        
+                        <button class="btn" onclick="handleLogin()">
+                            <i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ
+                        </button>
+                        
+                        <div class="mt-4 text-gray text-sm">
+                            <p><strong>ทดลองใช้งาน:</strong></p>
+                            <div class="flex justify-between mt-2">
+                                <span class="badge badge-team-specialist" onclick="document.getElementById('userIdInput').value='ttb_yj'">Master: ttb_yj</span>
+                                <span class="badge badge-team-specialist" onclick="document.getElementById('userIdInput').value='ttb_ac'">Admin: ttb_ac</span>
+                                <span class="badge badge-team-specialist" onclick="document.getElementById('userIdInput').value='ttb_tt'">Trainer: ttb_tt</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add enter key support
+            document.getElementById('userIdInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') handleLogin();
+            });
+        }
+
+        function handleLogin() {
+            const userIdInput = document.getElementById('userIdInput');
+            if (userIdInput) {
+                login(userIdInput.value);
+            }
+        }
+
+        function renderMainApp(container) {
+            const today = getToday();
+            const todayTasks = tasks.filter(t => t.date === today);
+            const myTasksToday = todayTasks.filter(t => t.trainer_id === currentUser.id);
+            
+            container.innerHTML = `
+                <!-- Header -->
+                <div class="header">
+                    <div class="header-content">
+                        <h1>ttb Trainer Task</h1>
+                        <div class="subtitle">${currentUser.nickname} • ${currentUser.role}</div>
+                    </div>
+                    <div class="user-avatar" onclick="switchView('profile')">
+                        ${getInitials(currentUser.nickname)}
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="main-content" id="mainContent">
+                    ${renderCurrentView()}
+                </div>
+
+                <!-- Navigation -->
+                <div class="nav-bar">
+                    <div class="nav-item ${currentView === 'home' ? 'active' : ''}" onclick="switchView('home')">
+                        <i class="fas fa-home nav-icon"></i>
+                        <span class="nav-label">หน้าแรก</span>
+                    </div>
+                    
+                    <div class="nav-item ${currentView === 'schedule' ? 'active' : ''}" onclick="switchView('schedule')">
+                        <i class="fas fa-calendar-alt nav-icon"></i>
+                        <span class="nav-label">ตารางงาน</span>
+                    </div>
+                    
+                    <div class="nav-add-btn" onclick="switchView('add')">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    
+                    <div class="nav-item ${currentView === 'summary' ? 'active' : ''}" onclick="switchView('summary')">
+                        <i class="fas fa-list-check nav-icon"></i>
+                        <span class="nav-label">สรุปงาน</span>
+                    </div>
+                    
+                    <div class="nav-item ${currentView === 'profile' ? 'active' : ''}" onclick="switchView('profile')">
+                        <i class="fas fa-user nav-icon"></i>
+                        <span class="nav-label">โปรไฟล์</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCurrentView() {
+            switch (currentView) {
+                case 'home':
+                    return renderHomeView();
+                case 'schedule':
+                    return renderScheduleView();
+                case 'add':
+                    return renderAddTaskView();
+                case 'summary':
+                    return renderSummaryView();
+                case 'profile':
+                    return renderProfileView();
+                default:
+                    return renderHomeView();
+            }
+        }
+
+        function renderHomeView() {
+            const today = getToday();
+            const todayTasks = tasks.filter(t => t.date === today);
+            const myTasksToday = todayTasks.filter(t => t.trainer_id === currentUser.id);
+            const onlineCount = todayTasks.filter(t => t.method === 'Online').length;
+            const f2fCount = todayTasks.filter(t => t.method === 'F2F').length;
+
+            return `
+                <div class="mb-6">
+                    <div class="card">
+                        <h2 class="card-title">
+                            <i class="fas fa-chart-bar"></i> ภาพรวมวันนี้
+                        </h2>
+                        
+                        <div class="flex justify-between text-center mb-4">
+                            <div>
+                                <div class="text-2xl font-bold text-primary">${todayTasks.length}</div>
+                                <div class="text-xs text-gray">งานทั้งหมด</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-success">${onlineCount}</div>
+                                <div class="text-xs text-gray">Online</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-warning">${f2fCount}</div>
+                                <div class="text-xs text-gray">Face-to-Face</div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-sm text-gray">
+                            <i class="fas fa-calendar-day"></i> ${getThaiDate(today)}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="card-title">
+                            <i class="fas fa-tasks"></i> งานของฉันวันนี้
+                        </h2>
+                        <button class="text-sm text-primary font-bold" onclick="switchView('schedule')">
+                            ดูทั้งหมด <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    
+                    ${myTasksToday.length > 0 ? 
+                        myTasksToday.map(task => renderTaskCard(task, true)).join('') :
+                        `
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-check"></i>
+                            <p>ไม่มีงานในวันนี้</p>
+                            <button class="btn btn-outline mt-4" onclick="switchView('add')">
+                                <i class="fas fa-plus"></i> เพิ่มงานใหม่
+                            </button>
+                        </div>
+                        `
+                    }
+                </div>
+
+                <div>
+                    <h2 class="card-title mb-4">
+                        <i class="fas fa-users"></i> สถานะเพื่อนร่วมทีม
+                    </h2>
+                    
+                    <div class="card">
+                        <div class="flex gap-2 mb-4">
+                            <button class="flex-1 btn ${getFilter() === 'free' ? 'btn-success' : 'btn-outline'}" 
+                                    onclick="setFilter('free')">
+                                ว่าง (${getAvailableUsers().free.length})
+                            </button>
+                            <button class="flex-1 btn ${getFilter() === 'busy' ? 'btn-danger' : 'btn-outline'}" 
+                                    onclick="setFilter('busy')">
+                                มีงาน (${getAvailableUsers().busy.length})
+                            </button>
+                        </div>
+                        
+                        <div style="max-height: 200px; overflow-y: auto;">
+                            ${renderAvailabilityList()}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderScheduleView() {
+            const selectedDate = getScheduleDate() || getToday();
+            const filteredTasks = tasks.filter(t => t.date === selectedDate);
+            
+            return `
+                <div class="mb-6">
+                    <div class="card">
+                        <h2 class="card-title">
+                            <i class="fas fa-calendar-alt"></i> ตารางงาน
+                        </h2>
+                        
+                        <div class="input-group">
+                            <label class="input-label">เลือกวันที่</label>
+                            <input type="date" 
+                                   id="scheduleDatePicker" 
+                                   class="input" 
+                                   value="${selectedDate}"
+                                   onchange="updateScheduleDate(this.value)">
+                        </div>
+                        
+                        <div class="text-sm text-gray mb-4">
+                            <i class="fas fa-info-circle"></i> ${getThaiDate(selectedDate)}
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    ${filteredTasks.length > 0 ? 
+                        filteredTasks.map(task => renderTaskCard(task, false)).join('') :
+                        `
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-times"></i>
+                            <p>ไม่มีงานในวันที่เลือก</p>
+                            <button class="btn btn-outline mt-4" onclick="switchView('add')">
+                                <i class="fas fa-plus"></i> เพิ่มงานใหม่
+                            </button>
+                        </div>
+                        `
+                    }
+                </div>
+            `;
+        }
+
+        function renderAddTaskView() {
+            const tomorrow = getTomorrow();
+            
+            return `
+                <div class="mb-6">
+                    <div class="card">
+                        <h2 class="card-title">
+                            <i class="fas fa-plus-circle"></i> เพิ่มงานใหม่
+                        </h2>
+                        
+                        <div class="input-group">
+                            <label class="input-label">วันที่</label>
+                            <input type="date" id="taskDate" class="input" value="${tomorrow}" min="${getToday()}">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="input-group">
+                                <label class="input-label">เวลาเริ่ม</label>
+                                <input type="time" id="startTime" class="input" value="09:00">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">เวลาสิ้นสุด</label>
+                                <input type="time" id="endTime" class="input" value="12:00">
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">Partner</label>
+                            <select id="partner" class="select">
+                                ${PARTNERS.map(p => `<option value="${p}">${p}</option>`).join('')}
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">รูปแบบ</label>
+                            <div class="flex gap-2">
+                                <button type="button" id="methodF2F" class="flex-1 btn ${getTaskMethod() === 'F2F' ? '' : 'btn-outline'}" onclick="setTaskMethod('F2F')">
+                                    🏢 F2F
+                                </button>
+                                <button type="button" id="methodOnline" class="flex-1 btn ${getTaskMethod() === 'Online' ? 'btn-success' : 'btn-outline'}" onclick="setTaskMethod('Online')">
+                                    💻 Online
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">รายละเอียดงาน (Course)</label>
+                            <input type="text" id="detail" class="input" placeholder="ระบุชื่อหลักสูตรหรือรายละเอียดงาน">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">สถานที่ (Location)</label>
+                            <input type="text" id="location" class="input" placeholder="เช่น ttb สำนักงานใหญ่, MS Teams">
+                        </div>
+                        
+                        <div class="flex gap-2 mt-6">
+                            <button class="flex-1 btn btn-outline" onclick="switchView('home')">
+                                <i class="fas fa-times"></i> ยกเลิก
+                            </button>
+                            <button class="flex-1 btn" onclick="saveNewTask()">
+                                <i class="fas fa-save"></i> บันทึก
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSummaryView() {
+            const selectedDate = getSummaryDate() || getTomorrow();
+            
+            return `
+                <div class="mb-6">
+                    <div class="card">
+                        <h2 class="card-title">
+                            <i class="fas fa-file-lines"></i> สรุปงานสำหรับ LINE
+                        </h2>
+                        
+                        <div class="input-group">
+                            <label class="input-label">เลือกวันที่ต้องการสรุป</label>
+                            <input type="date" 
+                                   id="summaryDatePicker" 
+                                   class="input" 
+                                   value="${selectedDate}"
+                                   onchange="updateSummaryDate(this.value)">
+                        </div>
+                        
+                        <div class="text-sm text-gray mb-4">
+                            <i class="fas fa-info-circle"></i> ${getThaiDate(selectedDate)}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <div class="card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-primary">ข้อความสำหรับส่ง LINE</h3>
+                            <button class="btn btn-success" onclick="copySummaryToClipboard()" id="copyButton">
+                                <i class="fas fa-copy"></i> คัดลอก
+                            </button>
+                        </div>
+                        
+                        <textarea id="summaryText" class="summary-text" readonly>${generateSummaryText(selectedDate)}</textarea>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderProfileView() {
+            return `
+                <div class="text-center">
+                    <div class="user-avatar" style="width: 100px; height: 100px; margin: 0 auto 20px; font-size: 36px;">
+                        ${getInitials(currentUser.nickname)}
+                    </div>
+                    
+                    <h2 class="text-xl font-bold text-primary mb-2">${currentUser.name}</h2>
+                    <p class="text-gray mb-4">${currentUser.email}</p>
+                    
+                    <div class="mb-6">
+                        <span class="badge ${currentUser.team === TEAMS.SPECIALIST ? 'badge-team-specialist' : 'badge-team-mandatory'}">
+                            ${currentUser.role} • ${currentUser.team || 'ไม่มีทีม'}
+                        </span>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="flex justify-between items-center py-3 border-b border-gray-light">
+                            <span class="text-gray">User ID</span>
+                            <span class="font-bold">${currentUser.id}</span>
+                        </div>
+                        <div class="flex justify-between items-center py-3 border-b border-gray-light">
+                            <span class="text-gray">ทีม</span>
+                            <span class="font-bold">${currentUser.team || '-'}</span>
+                        </div>
+                        <div class="flex justify-between items-center py-3">
+                            <span class="text-gray">สถานะ</span>
+                            <span class="font-bold text-success">✅ ใช้งานอยู่</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-danger" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
+                    </button>
+                </div>
+            `;
+        }
+
+        function renderTaskCard(task, simple = false) {
+            const canDelete = currentUser.id === task.created_by || 
+                            currentUser.role === ROLES.MASTER || 
+                            currentUser.role === ROLES.ADMIN;
+            
+            return `
+                <div class="card task-card ${task.method.toLowerCase()} mb-4">
+                    <div class="task-header">
+                        <div class="task-trainer">
+                            <div class="trainer-avatar">
+                                ${getInitials(task.trainer_nickname)}
+                            </div>
+                            <div class="trainer-info">
+                                <h4>${task.trainer_nickname}</h4>
+                                <p>${task.team}</p>
+                            </div>
+                        </div>
+                        <div class="task-time">
+                            ${task.start_time} - ${task.end_time}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <span class="badge ${task.method === 'Online' ? 'badge-online' : 'badge-f2f'}">
+                            ${task.method}
+                        </span>
+                        <span class="badge badge-partner">
+                            ${task.partner}
+                        </span>
+                    </div>
+                    
+                    <div class="task-detail">${task.detail}</div>
+                    
+                    <div class="task-location">
+                        <i class="fas ${task.method === 'Online' ? 'fa-video' : 'fa-location-dot'}"></i>
+                        ${task.location}
+                    </div>
+                    
+                    ${!simple && canDelete ? `
+                        <div class="task-actions">
+                            <button class="text-sm text-danger" onclick="handleDeleteTask('${task.id}')">
+                                <i class="fas fa-trash"></i> ลบงาน
+                            </button>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // ============================================
+        // VIEW STATE MANAGEMENT
+        // ============================================
+        let currentFilter = 'free';
+        let scheduleDate = null;
+        let summaryDate = null;
+        let taskMethod = 'F2F';
+
+        function switchView(view) {
+            currentView = view;
+            renderApp();
+        }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            renderApp();
+        }
+
+        function getFilter() {
+            return currentFilter;
+        }
+
+        function updateScheduleDate(date) {
+            scheduleDate = date;
+            renderApp();
+        }
+
+        function getScheduleDate() {
+            return scheduleDate;
+        }
+
+        function updateSummaryDate(date) {
+            summaryDate = date;
+            renderApp();
+        }
+
+        function getSummaryDate() {
+            return summaryDate;
+        }
+
+        function setTaskMethod(method) {
+            taskMethod = method;
+            const f2fBtn = document.getElementById('methodF2F');
+            const onlineBtn = document.getElementById('methodOnline');
+            
+            if (f2fBtn && onlineBtn) {
+                if (method === 'F2F') {
+                    f2fBtn.className = 'flex-1 btn';
+                    onlineBtn.className = 'flex-1 btn btn-outline';
+                } else {
+                    f2fBtn.className = 'flex-1 btn btn-outline';
+                    onlineBtn.className = 'flex-1 btn btn-success';
+                }
+            }
+        }
+
+        function getTaskMethod() {
+            return taskMethod;
+        }
+
+        // ============================================
+        // AVAILABILITY FUNCTIONS
+        // ============================================
+        function getAvailableUsers() {
+            const today = getToday();
+            const todayTasks = tasks.filter(t => t.date === today);
+            
+            const result = {
+                free: [],
+                busy: []
+            };
+            
+            SYSTEM_USERS.forEach(user => {
+                const userTasks = todayTasks.filter(t => t.trainer_id === user.id);
+                if (userTasks.length > 0) {
+                    result.busy.push({ ...user, tasks: userTasks });
+                } else {
+                    result.free.push(user);
+                }
+            });
+            
+            return result;
+        }
+
+        function renderAvailabilityList() {
+            const availability = getAvailableUsers();
+            const usersToShow = availability[currentFilter];
+            
+            if (usersToShow.length === 0) {
+                return `<div class="text-center text-gray py-4">ไม่พบข้อมูล</div>`;
+            }
+            
+            return usersToShow.map(user => {
+                if (currentFilter === 'busy') {
+                    return `
+                        <div class="flex items-center justify-between py-3 border-b border-gray-light last:border-0">
+                            <div class="flex items-center gap-3">
+                                <div class="w-3 h-3 rounded-full bg-danger"></div>
+                                <div>
+                                    <div class="font-bold">${user.nickname}</div>
+                                    <div class="text-xs text-gray truncate" style="max-width: 200px;">
+                                        ${user.tasks[0].detail}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-xs text-gray">
+                                ${user.tasks.length} งาน
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="flex items-center justify-between py-3 border-b border-gray-light last:border-0">
+                            <div class="flex items-center gap-3">
+                                <div class="w-3 h-3 rounded-full bg-success"></div>
+                                <div class="font-bold">${user.nickname}</div>
+                            </div>
+                            <div class="text-xs text-success">
+                                ว่าง
+                            </div>
+                        </div>
+                    `;
+                }
+            }).join('');
+        }
+
+        // ============================================
+        // TASK OPERATIONS
+        // ============================================
+        async function saveNewTask() {
+            const taskData = {
+                date: document.getElementById('taskDate').value,
+                start_time: document.getElementById('startTime').value,
+                end_time: document.getElementById('endTime').value,
+                trainer_id: currentUser.id,
+                partner: document.getElementById('partner').value,
+                method: getTaskMethod(),
+                detail: document.getElementById('detail').value,
+                location: document.getElementById('location').value
+            };
+
+            // Validation
+            if (!taskData.detail || !taskData.location) {
+                alert('กรุณากรอกรายละเอียดงานและสถานที่ให้ครบถ้วน');
+                return;
+            }
+
+            if (taskData.start_time >= taskData.end_time) {
+                alert('เวลาเริ่มงานต้องน้อยกว่าเวลาสิ้นสุดงาน');
+                return;
+            }
+
+            const success = await addTask(taskData);
+            if (success) {
+                switchView('home');
+            }
+        }
+
+        async function handleDeleteTask(taskId) {
+            const success = await deleteTask(taskId);
+            if (success) {
+                renderApp();
+            }
+        }
+
+        // ============================================
+        // SUMMARY FUNCTIONS
+        // ============================================
+        function generateSummaryText(date) {
+            const filteredTasks = tasks.filter(t => t.date === date);
+            const specialistTasks = filteredTasks.filter(t => t.team === TEAMS.SPECIALIST);
+            const mandatoryTasks = filteredTasks.filter(t => t.team === TEAMS.MANDATORY);
+
+            let text = `ตารางงานวันที่ ${date}\n`;
+            text += `สรุปเมื่อ: ${new Date().toLocaleDateString('th-TH')}\n\n`;
+
+            // Training Specialist
+            text += `♡ ${TEAMS.SPECIALIST}\n`;
+            if (specialistTasks.length === 0) {
+                text += `   (ไม่มีตารางงาน)\n`;
+            } else {
+                const trainers = [...new Set(specialistTasks.map(t => t.trainer_id))];
+                trainers.forEach(tid => {
+                    const user = SYSTEM_USERS.find(u => u.id === tid);
+                    const userTasks = specialistTasks.filter(t => t.trainer_id === tid);
+                    text += `● ${user ? user.name : tid}\n`;
+                    userTasks.forEach(t => {
+                        const icon = t.method === 'Online' ? '💻' : '🏢';
+                        text += `   - ${t.partner}:(${t.method}) ${t.detail} @${t.location} (${t.start_time}-${t.end_time})\n`;
+                    });
+                });
+            }
+
+            text += `\n`;
+
+            // Mandatory
+            text += `♡ ${TEAMS.MANDATORY}\n`;
+            if (mandatoryTasks.length === 0) {
+                text += `   (ไม่มีตารางงาน)\n`;
+            } else {
+                const trainers = [...new Set(mandatoryTasks.map(t => t.trainer_id))];
+                trainers.forEach(tid => {
+                    const user = SYSTEM_USERS.find(u => u.id === tid);
+                    const userTasks = mandatoryTasks.filter(t => t.trainer_id === tid);
+                    text += `● ${user ? user.name : tid}\n`;
+                    userTasks.forEach(t => {
+                        const icon = t.method === 'Online' ? '💻' : '🏢';
+                        text += `   - ${t.partner}:(${t.method}) ${t.detail} @${t.location} (${t.start_time}-${t.end_time})\n`;
+                    });
+                });
+            }
+
+            text += `\n---\nระบบ ttb Trainer Task`;
+            return text;
+        }
+
+        async function copySummaryToClipboard() {
+            const textarea = document.getElementById('summaryText');
+            const button = document.getElementById('copyButton');
+            
+            try {
+                textarea.select();
+                textarea.setSelectionRange(0, 99999);
+                
+                const successful = document.execCommand('copy');
+                
+                if (successful) {
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '<i class="fas fa-check"></i> คัดลอกเรียบร้อย!';
+                    button.className = 'btn btn-success';
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.className = 'btn btn-success';
+                    }, 2000);
+                }
+            } catch (err) {
+                console.error('Failed to copy:', err);
+                alert('ไม่สามารถคัดลอกได้ กรุณาลองใหม่อีกครั้ง');
+            }
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        function initApp() {
+            // Check for saved user
+            const savedUser = localStorage.getItem('ttb_trainer_user');
+            if (savedUser) {
+                const user = SYSTEM_USERS.find(u => u.id === savedUser);
+                if (user) {
+                    currentUser = user;
+                    currentView = 'home';
+                    loadTasks().then(() => renderApp());
+                    return;
+                }
+            }
+            
+            // Show login screen
+            renderApp();
+        }
+
+        // Make functions available globally
+        window.switchView = switchView;
+        window.setFilter = setFilter;
+        window.updateScheduleDate = updateScheduleDate;
+        window.updateSummaryDate = updateSummaryDate;
+        window.setTaskMethod = setTaskMethod;
+        window.saveNewTask = saveNewTask;
+        window.handleDeleteTask = handleDeleteTask;
+        window.copySummaryToClipboard = copySummaryToClipboard;
+        window.handleLogin = handleLogin;
+        window.logout = logout;
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', initApp);
+        // Also run init if script is at the end of body
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+    </script>
+
+    <style>
+        .grid {
+            display: grid;
+        }
+        
+        .grid-cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .text-2xl {
+            font-size: 1.5rem;
+        }
+        
+        .text-xl {
+            font-size: 1.25rem;
+        }
+        
+        .border-b {
+            border-bottom-width: 1px;
+        }
+        
+        .border-gray-light {
+            border-color: var(--gray-light);
+        }
+        
+        .py-3 {
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+        
+        .last\\:border-0:last-child {
+            border: 0;
+        }
+        
+        .truncate {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .bg-success {
+            background-color: var(--success);
+        }
+        
+        .bg-danger {
+            background-color: var(--danger);
+        }
+        
+        .bg-warning {
+            background-color: var(--warning);
+        }
+    </style>
+</body>
+</html>
