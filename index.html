@@ -412,51 +412,14 @@
                     anon_key: 'mock-key'
                 },
                 mock_data: {
-                    accounts: [
-                        {
-                            id: 'admin-001',
-                            email: 'admin@ttb.com',
-                            password: 'admin123',
-                            display_name: 'Admin User',
-                            role: 'Admin',
-                            team: 'Training Specialist',
-                            avatar_url: null
-                        },
-                        {
-                            id: 'master-001',
-                            email: 'master@ttb.com',
-                            password: 'master123',
-                            display_name: 'Master Admin',
-                            role: 'Master',
-                            team: 'Training Specialist',
-                            avatar_url: null
-                        },
-                        {
-                            id: 'trainer-001',
-                            email: 'trainer1@ttb.com',
-                            password: 'trainer123',
-                            display_name: 'สมชาย ใจดี',
-                            role: 'Trainer',
-                            team: 'Training Specialist',
-                            avatar_url: null
-                        },
-                        {
-                            id: 'trainer-002',
-                            email: 'trainer2@ttb.com',
-                            password: 'trainer123',
-                            display_name: 'สุนิสา รักงาน',
-                            role: 'Trainer',
-                            team: 'Mandatory',
-                            avatar_url: null
-                        }
-                    ],
+                    accounts: [],
                     schedules: [
                         {
                             id: 'sched-001',
                             date: new Date().toISOString().split('T')[0],
                             start_time: '09:00',
                             end_time: '12:00',
-                            trainer_id: 'trainer-001',
+                            trainer_id: 'ttb_tt',
                             partner: 'ttb',
                             method: 'f2f',
                             course_detail: 'Role-play การขายบัตรเครดิตขั้นสูง',
@@ -473,6 +436,180 @@
                 }
             }
         };
+
+        // ==========================================
+        // REAL PRODUCTION USERS DATA
+        // ==========================================
+        const REAL_PRODUCTION_USERS = [
+            // ==========================================
+            // MASTER ACCOUNT - REAL PRODUCTION
+            // ==========================================
+            {
+                id: 'ttb_yj',
+                email: 'yannapat.prudential@gmail.com',
+                display_name: 'ญานภัทร จารุวงศ์ไพบูลย์',
+                role: 'Master',
+                team: 'Training Specialist',
+                avatar_url: null,
+                calendar_id: '243b7207b10b41ff52b0aa0ab258a75fe4c5a8f76225c53d24d931d6cc8a99ee@group.calendar.google.com',
+                calendar_owner: 'plt.ttb.training@gmail.com',
+                status: 'Active',
+                password: 'ttb_master_0229' // Default password for production
+            },
+            // ==========================================
+            // ADMIN ACCOUNTS
+            // ==========================================
+            {
+                id: 'ttb_ac',
+                email: 'Ananyacha10@gmail.com',
+                display_name: 'อนัญญา จันทรามาน',
+                role: 'Admin',
+                team: '',
+                avatar_url: null,
+                calendar_id: 'f2a120b6ce63657310dee6b8701a11caeb5bf2dbaf02c9194816c5a38ee2b344@group.calendar.google.com',
+                calendar_owner: 'plt.ttb.training@gmail.com',
+                status: 'Active',
+                password: 'ttb_admin_0229'
+            },
+            {
+                id: 'ttb_sp',
+                email: 'jibjib1981.SP@gmail.com',
+                display_name: 'สุภาภร พลับพลี',
+                role: 'Admin',
+                team: '',
+                avatar_url: null,
+                calendar_id: 'e5310de568ad3ed684fa94af07f5670d8cdb8090f9f65581c1ce59fc6f4472bc@group.calendar.google.com',
+                calendar_owner: 'plt.ttb.training@gmail.com',
+                status: 'Active',
+                password: 'ttb_admin_0229'
+            },
+            // ==========================================
+            // TRAINING SPECIALIST TEAM
+            // ==========================================
+            {
+                id: 'ttb_tt',
+                email: 'thanayot.calendar@gmail.com',
+                display_name: 'ธนยศ เทียมเศวษ',
+                role: 'Trainer',
+                team: 'Training Specialist',
+                avatar_url: null,
+                calendar_id: '37a13d6c5a1c36c4804174f12a24a97c108c71b5e99eb0fd687319d3f588d192@group.calendar.google.com',
+                calendar_owner: 'plt.ttb.training@gmail.com',
+                status: 'Active',
+                password: 'ttb_trainer_0229'
+            },
+            {
+                id: 'ttb_pp',
+                email: 'greatkaloo@gmail.com',
+                display_name: 'พชร ภัทรตริรักษ์',
+                role: 'Trainer',
+                team: 'Training Specialist',
+                avatar_url: null,
+                calendar_id: '037fd257a582fbde120f72130516d20abc9bf6814089014b7f2d86a8039a30f8@group.calendar.google.com',
+                calendar_owner: 'plt.ttb.training@gmail.com',
+                status: 'Active',
+                password: 'ttb_trainer_0229'
+            },
+            {
+                id: 'ttb_wc',
+                email: 'wattanapan.ch@gmail.com',
+                display_name: 'วัฒนพันธ์ ชัยพูล',
+                role: 'Trainer',
+                team: 'Training Specialist',
+                avatar_url: null,
+                calendar_id: '930140c5f70462bcdf96239d1926a45518b036f5e542491de1d0aa5b4ef8849e@group.calendar.google.com',
+                calendar_owner: 'plt.ttb.training@gmail.com',
+                status: 'Active',
+                password: 'ttb_trainer_0229'
+            },
+            {
+                id: 'ttb_as',
+                email: 'arthaphs@gmail.com',
+                display_name: 'อรรถพันธ์ สุวรรณประดิษฐ์',
+                role: 'Trainer',
+                team: 'Training Specialist',
+                avatar_url: null,
+                calendar_id: '328ff6230842a54c7e819f2734bd58b9220f5daf04da5026ab9f75e7456ade51@group.calendar.google.com',
+                calendar_owner: 'plt.ttb.training@gmail.com',
+                status: 'Active',
+                password: 'ttb_trainer_0229'
+            },
+            {
+                id: 'ttb_nj',
+                email: 'natkanitjariyadilok@gmail.com',
+                display_name: 'ณัฐกนิษฐ์ จริยะดิลก',
+                role: 'Trainer',
+                team: 'Training Specialist',
+                avatar_url: null,
+                calendar_id: '98b8a1ab70a6106fe98df92197e9747d8fce761bcc8628495a70b1c3be6f8957@group.calendar.google.com',
+                calendar_owner: 'plt.ttb.training@gmail.com',
+                status: 'Active',
+                password: 'ttb_trainer_0229'
+            },
+            // ==========================================
+            // MANDATORY TEAM
+            // ==========================================
+            {
+                id: 'ttb_ap',
+                email: 'korn.ak28@gmail.com',
+                display_name: 'อลงกรณ์ ภู่อิ่ม',
+                role: 'Trainer',
+                team: 'Mandatory',
+                avatar_url: null,
+                calendar_id: '05867807cc350ac519678d2654ff159669392a63b9cdf7d062a7ac3a3d5a547d@group.calendar.google.com',
+                calendar_owner: 'plt.ttb.training@gmail.com',
+                status: 'Active',
+                password: 'ttb_trainer_0229'
+            },
+            {
+                id: 'ttb_np',
+                email: 'nantidapin6395@gmail.com',
+                display_name: 'นันทิดา ปิ่นหิรัญ',
+                role: 'Trainer',
+                team: 'Mandatory',
+                avatar_url: null,
+                calendar_id: '103c1300e8eeaf9751c24f8a6342f8591185051d625337bc0de37886fca3e7b0@group.calendar.google.com',
+                calendar_owner: 'plt.ttb.training@gmail.com',
+                status: 'Active',
+                password: 'ttb_trainer_0229'
+            },
+            {
+                id: 'ttb_pn',
+                email: 'patchareeya.n0412@gmail.com',
+                display_name: 'พัชรียา นพวินญูวงค์',
+                role: 'Trainer',
+                team: 'Mandatory',
+                avatar_url: null,
+                calendar_id: '44dcf74062b5f3c057a13831193ed885386dce5625c284a9181c63332daa7fd6@group.calendar.google.com',
+                calendar_owner: 'plt.ttb.training@gmail.com',
+                status: 'Active',
+                password: 'ttb_trainer_0229'
+            },
+            {
+                id: 'ttb_sd',
+                email: 'Wad008.dd@gmail.com',
+                display_name: 'สุขสวัสดิ์ ดิษสำเริง',
+                role: 'Trainer',
+                team: 'Mandatory',
+                avatar_url: null,
+                calendar_id: '7a161c4218b2a8ba1bc003df52a20bad2e63ec6e93801e8584a0d3955194bf61@group.calendar.google.com',
+                calendar_owner: 'plt.ttb.training@gmail.com',
+                status: 'Active',
+                password: 'ttb_trainer_0229'
+            },
+            {
+                id: 'ttb_sk',
+                email: 'Supat.koonkitti@gmail.com',
+                display_name: 'สุพัฒน์ คุณกิตติ',
+                role: 'Trainer',
+                team: 'Mandatory',
+                avatar_url: null,
+                calendar_id: '9bbab412406c7952deee5325d5d6f40b360745c2a1774f54916dc1f9a9e65fbe@group.calendar.google.com',
+                calendar_owner: 'plt.ttb.training@gmail.com',
+                status: 'Active',
+                password: 'ttb_trainer_0229'
+            }
+        ];
 
         // Global State
         let currentMode = null;
@@ -564,6 +701,12 @@
         // UAT MOCK SYSTEM
         // ==========================================
         function initializeUATSystem() {
+            // Populate UAT mock data with real users (for testing)
+            SYSTEM_CONFIG.uat.mock_data.accounts = REAL_PRODUCTION_USERS.map(user => ({
+                ...user,
+                password: '0229' // Default UAT password for all users
+            }));
+            
             supabaseClient = {
                 auth: {
                     getSession: async () => {
@@ -582,6 +725,7 @@
                         if (account) {
                             const roleSelect = document.getElementById('uat-role');
                             if (roleSelect && currentMode === 'uat') {
+                                // Allow role switching in UAT mode
                                 account.role = roleSelect.value;
                             }
                             
@@ -791,8 +935,8 @@
             const uatRoleSection = document.getElementById('uat-role-section');
             
             if (currentMode === 'production') {
-                loginTitle.textContent = 'ยินดีต้อนรับ';
-                loginSubtitle.textContent = 'เข้าสู่ระบบ ttb trainer task (Production)';
+                loginTitle.textContent = 'Production Mode';
+                loginSubtitle.textContent = 'เข้าสู่ระบบด้วยบัญชีจริง';
                 demoInfo.classList.add('hidden');
                 uatRoleSection.classList.add('hidden');
             } else {
@@ -1269,130 +1413,6 @@
         // ==========================================
         // USER MANAGEMENT FUNCTIONS
         // ==========================================
-        const REAL_USERS = [
-            // Master
-            {
-                id: 'ttb_yj',
-                email: 'yannapat.prudential@gmail.com',
-                display_name: 'ญานภัทร จารุวงศ์ไพบูลย์',
-                role: 'Master',
-                team: 'Training Specialist',
-                avatar_url: null,
-                calendar_id: '243b7207b10b41ff52b0aa0ab258a75fe4c5a8f76225c53d24d931d6cc8a99ee@group.calendar.google.com'
-            },
-            // Admin
-            {
-                id: 'ttb_ac',
-                email: 'Ananyacha10@gmail.com',
-                display_name: 'อนัญญา จันทรามาน',
-                role: 'Admin',
-                team: '',
-                avatar_url: null,
-                calendar_id: 'f2a120b6ce63657310dee6b8701a11caeb5bf2dbaf02c9194816c5a38ee2b344@group.calendar.google.com'
-            },
-            {
-                id: 'ttb_sp',
-                email: 'jibjib1981.SP@gmail.com',
-                display_name: 'สุภาภร พลับพลี',
-                role: 'Admin',
-                team: '',
-                avatar_url: null,
-                calendar_id: 'e5310de568ad3ed684fa94af07f5670d8cdb8090f9f65581c1ce59fc6f4472bc@group.calendar.google.com'
-            },
-            // Training Specialist Team
-            {
-                id: 'ttb_tt',
-                email: 'thanayot.calendar@gmail.com',
-                display_name: 'ธนยศ เทียมเศวษ',
-                role: 'Trainer',
-                team: 'Training Specialist',
-                avatar_url: null,
-                calendar_id: '37a13d6c5a1c36c4804174f12a24a97c108c71b5e99eb0fd687319d3f588d192@group.calendar.google.com'
-            },
-            {
-                id: 'ttb_pp',
-                email: 'greatkaloo@gmail.com',
-                display_name: 'พชร ภัทรตริรักษ์',
-                role: 'Trainer',
-                team: 'Training Specialist',
-                avatar_url: null,
-                calendar_id: '037fd257a582fbde120f72130516d20abc9bf6814089014b7f2d86a8039a30f8@group.calendar.google.com'
-            },
-            {
-                id: 'ttb_wc',
-                email: 'wattanapan.ch@gmail.com',
-                display_name: 'วัฒนพันธ์ ชัยพูล',
-                role: 'Trainer',
-                team: 'Training Specialist',
-                avatar_url: null,
-                calendar_id: '930140c5f70462bcdf96239d1926a45518b036f5e542491de1d0aa5b4ef8849e@group.calendar.google.com'
-            },
-            {
-                id: 'ttb_as',
-                email: 'arthaphs@gmail.com',
-                display_name: 'อรรถพันธ์ สุวรรณประดิษฐ์',
-                role: 'Trainer',
-                team: 'Training Specialist',
-                avatar_url: null,
-                calendar_id: '328ff6230842a54c7e819f2734bd58b9220f5daf04da5026ab9f75e7456ade51@group.calendar.google.com'
-            },
-            {
-                id: 'ttb_nj',
-                email: 'natkanitjariyadilok@gmail.com',
-                display_name: 'ณัฐกนิษฐ์ จริยะดิลก',
-                role: 'Trainer',
-                team: 'Training Specialist',
-                avatar_url: null,
-                calendar_id: '98b8a1ab70a6106fe98df92197e9747d8fce761bcc8628495a70b1c3be6f8957@group.calendar.google.com'
-            },
-            // Mandatory Team
-            {
-                id: 'ttb_ap',
-                email: 'korn.ak28@gmail.com',
-                display_name: 'อลงกรณ์ ภู่อิ่ม',
-                role: 'Trainer',
-                team: 'Mandatory',
-                avatar_url: null,
-                calendar_id: '05867807cc350ac519678d2654ff159669392a63b9cdf7d062a7ac3a3d5a547d@group.calendar.google.com'
-            },
-            {
-                id: 'ttb_np',
-                email: 'nantidapin6395@gmail.com',
-                display_name: 'นันทิดา ปิ่นหิรัญ',
-                role: 'Trainer',
-                team: 'Mandatory',
-                avatar_url: null,
-                calendar_id: '103c1300e8eeaf9751c24f8a6342f8591185051d625337bc0de37886fca3e7b0@group.calendar.google.com'
-            },
-            {
-                id: 'ttb_pn',
-                email: 'patchareeya.n0412@gmail.com',
-                display_name: 'พัชรียา นพวินญูวงค์',
-                role: 'Trainer',
-                team: 'Mandatory',
-                avatar_url: null,
-                calendar_id: '44dcf74062b5f3c057a13831193ed885386dce5625c284a9181c63332daa7fd6@group.calendar.google.com'
-            },
-            {
-                id: 'ttb_sd',
-                email: 'Wad008.dd@gmail.com',
-                display_name: 'สุขสวัสดิ์ ดิษสำเริง',
-                role: 'Trainer',
-                team: 'Mandatory',
-                avatar_url: null,
-                calendar_id: '7a161c4218b2a8ba1bc003df52a20bad2e63ec6e93801e8584a0d3955194bf61@group.calendar.google.com'
-            },
-            {
-                id: 'ttb_sk',
-                email: 'Supat.koonkitti@gmail.com',
-                display_name: 'สุพัฒน์ คุณกิตติ',
-                role: 'Trainer',
-                team: 'Mandatory',
-                avatar_url: null,
-                calendar_id: '9bbab412406c7952deee5325d5d6f40b360745c2a1774f54916dc1f9a9e65fbe@group.calendar.google.com'
-            }
-        ];
-
         async function syncUsers() {
             if (currentMode !== 'production') {
                 alert('ฟังก์ชันนี้ใช้งานได้เฉพาะใน Production Mode เท่านั้น');
@@ -1413,7 +1433,7 @@
             let successCount = 0;
             let errorCount = 0;
 
-            for (const user of REAL_USERS) {
+            for (const user of REAL_PRODUCTION_USERS) {
                 try {
                     // Check if user already exists
                     const { data: existingUser } = await supabaseClient
@@ -1431,7 +1451,9 @@
                                 role: user.role,
                                 team: user.team,
                                 avatar_url: user.avatar_url,
-                                calendar_id: user.calendar_id
+                                calendar_id: user.calendar_id,
+                                calendar_owner: user.calendar_owner,
+                                status: user.status
                             })
                             .eq('id', user.id);
 
@@ -1452,7 +1474,9 @@
                                 role: user.role,
                                 team: user.team,
                                 avatar_url: user.avatar_url,
-                                calendar_id: user.calendar_id
+                                calendar_id: user.calendar_id,
+                                calendar_owner: user.calendar_owner,
+                                status: user.status
                             }]);
 
                         if (error) {
