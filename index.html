@@ -1,3 +1,23 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTB Trainer System</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide-react"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap');
+        * { font-family: 'Noto Sans Thai', sans-serif; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
 import React, { useState, useEffect } from 'react';
 import { User, Lock, Users, Search, Calendar, LogOut, CheckCircle, AlertCircle, Shield, Plus, Edit, Trash2, Filter, ChevronDown } from 'lucide-react';
 
@@ -1237,3 +1257,6 @@ export default function App() {
     </div>
   );
 }
+    </script>
+</body>
+</html>
